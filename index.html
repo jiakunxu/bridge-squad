@@ -169,7 +169,7 @@ scene.background = new THREE.Color(0.012, 0.04, 0.12);
 scene.fog = new THREE.Fog(new THREE.Color(0.03, 0.075, 0.19), 85, 215);
 const camera = new THREE.PerspectiveCamera(44, 9 / 16, 0.5, 500);
 const coarse = matchMedia('(pointer: coarse)').matches;
-let stageW = 360, quality = coarse ? 0 : 1, autoQ = true;   // quality: 2 = full, 1 = lighter, 0 = no post / no shadows
+let stageW = 360, quality = 1, autoQ = true;   // quality: 2 = full, 1 = lighter, 0 = no post / no shadows
 
 const FLOAT_OK = renderer.capabilities.isWebGL2 && renderer.extensions.has('EXT_color_buffer_float');
 const post = { rt: null, lv: [], w: 0, h: 0 };
@@ -196,7 +196,7 @@ const matOut = fsMat(`uniform sampler2D t, b0, b1, b2, b3; uniform float bloom, 
     c = pow(clamp(c, 0.0, 1.0), vec3(1.0 / 2.2));
     c = mix(c, c * c * (3.0 - 2.0 * c), 0.3);
     gl_FragColor = vec4(c, 1.0);
-  }`, { t: { value: null }, b0: { value: null }, b1: { value: null }, b2: { value: null }, b3: { value: null }, bloom: { value: 0.75 }, expo: { value: 1.0 } });
+  }`, { t: { value: null }, b0: { value: null }, b1: { value: null }, b2: { value: null }, b3: { value: null }, bloom: { value: 0.62 }, expo: { value: 1.0 } });
 function fsPass(mat, target) { fsMesh.material = mat; renderer.setRenderTarget(target); renderer.render(fsScene, fsCam); }
 function setupPost() {
   if (post.rt) { post.rt.dispose(); for (const L of post.lv) { L.a.dispose(); L.b.dispose(); } post.rt = null; post.lv.length = 0; }
@@ -204,7 +204,9 @@ function setupPost() {
   const s = renderer.getDrawingBufferSize(new THREE.Vector2()), type = FLOAT_OK ? THREE.HalfFloatType : THREE.UnsignedByteType;
   post.w = s.x; post.h = s.y;
   post.rt = new THREE.WebGLRenderTarget(s.x, s.y, { type, samples: renderer.capabilities.isWebGL2 ? 4 : 0 });
-  let w = s.x, h = s.y;
+  // Keep the scene at full resolution and limit the cost of the soft bloom layers.
+  const bloomScale = Math.min(1, 1080 / s.y);
+  let w = Math.round(s.x * bloomScale), h = Math.round(s.y * bloomScale);
   for (let i = 0; i < 4; i++) {
     w = Math.max(2, w >> 1); h = Math.max(2, h >> 1);
     const o = { type, depthBuffer: false, minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter };
@@ -235,7 +237,11 @@ function resize() {
   stage.style.width = w + 'px'; stage.style.height = h + 'px';
   stage.style.fontSize = (w / 34) + 'px';
   stageW = w;
-  const ratio = Math.min(window.devicePixelRatio || 1, quality === 2 ? 2 : quality === 1 ? 1.25 : 1, quality === 0 ? 720 / h : Infinity);
+  const deviceRatio = window.devicePixelRatio || 1;
+  const ratioCap = [1, 1.5, 2.5][quality];
+  const heightCap = [720, 1440, 2304][quality];
+  const sampleRatio = quality === 2 ? Math.max(1.25, deviceRatio) : deviceRatio;
+  const ratio = Math.min(sampleRatio, ratioCap, heightCap / Math.max(1, h));
   const size = renderer.getSize(new THREE.Vector2());
   if (size.x !== w || size.y !== h || renderer.getPixelRatio() !== ratio) {
     renderer.setDrawingBufferSize(w, h, ratio);
@@ -519,12 +525,13 @@ const W1 = new THREE.Group(); scene.add(W1);
     x.restore();
     x.fillStyle = 'rgba(255,255,255,0.85)'; x.fillRect(44, 0, 8, h);
     for (let y = 28; y < h; y += 128) { x.fillStyle = 'rgba(255,255,255,0.62)'; x.fillRect(388, y, 9, 72); }
-    shade(x, w, h, dh, 512, 0.2);
+    shade(x, w, h, dh, 512, 0.27);
   });
   deckTex.wrapS = deckTex.wrapT = THREE.RepeatWrapping; deckTex.repeat.set(1, DKL / TILE);
   const nh = fbm(512, 32, 4, 11);
   for (let y = 0; y < 512; y++) for (let xx = 0; xx < 512; xx++) { const yy = y % 256; if (yy < 2 || yy > 253) nh[y * 512 + xx] -= 0.5; if (Math.abs(xx - 170.6) < 1.2 || Math.abs(xx - 341.3) < 1.2) nh[y * 512 + xx] -= 0.25; }
   const deckN = normalTex(nh, 512, 3.2);
+  deckN.repeat.copy(deckTex.repeat);
   const deckMat = std({ map: deckTex, normalMap: deckN, normalScale: new THREE.Vector2(0.75, 0.75), roughness: 0.82, metalness: 0, envMapIntensity: 0.26 });
   const deck = new THREE.Mesh(new THREE.PlaneGeometry(TILE, DKL).rotateX(-Math.PI / 2), deckMat);
   deck.position.set(0, 0, DKC); deck.receiveShadow = true; W1.add(deck);
@@ -716,12 +723,14 @@ function setStream(S, x0, y0, vx, vy, yEnd, rz0, rz1, rn0, rn1) {
     for (let i = 0; i < 22; i++) { const a = Math.random() * w, b = Math.random() * h, r = 30 + Math.random() * 110, g = x.createRadialGradient(a, b, 0, a, b, r); g.addColorStop(0, 'rgba(60,66,84,0.09)'); g.addColorStop(1, 'rgba(60,66,84,0)'); x.fillStyle = g; x.fillRect(a - r, b - r, r * 2, r * 2); }
     for (let i = 0; i < 3000; i++) { x.fillStyle = Math.random() < 0.5 ? 'rgba(255,255,255,0.10)' : 'rgba(40,48,66,0.10)'; x.fillRect(Math.random() * w, Math.random() * h, 1 + Math.random() * 2.5, 1 + Math.random() * 2.5); }
     for (let k = 0; k <= 4; k++) { x.fillStyle = 'rgba(52,58,76,0.26)'; x.fillRect(0, k * 256 - 2, w, 4); x.fillRect(k * 256 - 2, 0, 4, h); x.fillStyle = 'rgba(255,255,255,0.22)'; x.fillRect(0, k * 256 + 2, w, 2); x.fillRect(k * 256 + 2, 0, 2, h); }
-    shade(x, w, h, ph, 512, 0.2);
+    shade(x, w, h, ph, 512, 0.27);
   });
   plazaTex.wrapS = plazaTex.wrapT = THREE.RepeatWrapping; plazaTex.repeat.set(2 * P2_HW / 11.5, PL / 11.5);
   const nh = fbm(512, 32, 4, 29);
   for (let y = 0; y < 512; y++) for (let xx = 0; xx < 512; xx++) { const a = y % 128, b = xx % 128; if (a < 1 || a > 126 || b < 1 || b > 126) nh[y * 512 + xx] -= 0.3; }
-  add(W2, new THREE.PlaneGeometry(P2_HW * 2, PL).rotateX(-Math.PI / 2), std({ map: plazaTex, normalMap: normalTex(nh, 512, 3.2), normalScale: new THREE.Vector2(0.75, 0.75), roughness: 0.82, metalness: 0, envMapIntensity: 0.26 }), 0, 0, PC, false);
+  const plazaNormal = normalTex(nh, 512, 3.2);
+  plazaNormal.repeat.copy(plazaTex.repeat);
+  add(W2, new THREE.PlaneGeometry(P2_HW * 2, PL).rotateX(-Math.PI / 2), std({ map: plazaTex, normalMap: plazaNormal, normalScale: new THREE.Vector2(0.75, 0.75), roughness: 0.82, metalness: 0, envMapIntensity: 0.26 }), 0, 0, PC, false);
   const conc = std({ color: 0x8f95a6, roughness: 0.8, metalness: 0, envMapIntensity: 0.3 }), dark = std({ color: 0x4d5468, roughness: 0.55, metalness: 0.5, envMapIntensity: 0.5 }), pierM = std({ color: 0x5c6276, roughness: 0.85, metalness: 0 });
   add(W2, boxG(P2_HW * 2 + 0.7, 1.7, PL + 0.7), conc, 0, -0.86, PC, false);
   add(W2, boxG(P2_HW * 2 + 1.5, 0.5, PL + 1.5), dark, 0, -1.9, PC, false);
@@ -2478,7 +2487,7 @@ function draw(rdt) {
   mSold.instanceMatrix.needsUpdate = true; sAnim.needsUpdate = true;
   // enemies: animated skeleton up close, cheap rigid model in the distance
   const ea = mEnemy.instanceMatrix.array, fa = mEnemyFar.instanceMatrix.array, ec = mEnemy.instanceColor.array, fc = mEnemyFar.instanceColor.array, en = eAnim.array;
-  let frontD = 1e9, ne = 0, nfar = 0; const lodD = D + (quality === 2 ? 42 : quality === 1 ? 24 : 13), mar = LV === 2 && run;
+  let frontD = 1e9, ne = 0, nfar = 0; const lodD = D + (quality === 2 ? 48 : quality === 1 ? 27 : 13), mar = LV === 2 && run;
   for (let i = 0; i < E; i++) {
     const ch = eSt[i] === 1, far = eD[i] > lodD, tint = 0.78 + ((ePh[i] * 7.31) % 1) * 0.36, scl = 0.94 + (ePh[i] % 1) * 0.14;
     const ang = ch ? Math.atan2(X - eX[i], eD[i] - D) : Math.sin(time * 2 + ePh[i]) * (mar ? 0.1 : 0.25);
