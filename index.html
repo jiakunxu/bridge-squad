@@ -169,7 +169,7 @@ scene.background = new THREE.Color(0.012, 0.04, 0.12);
 scene.fog = new THREE.Fog(new THREE.Color(0.03, 0.075, 0.19), 85, 215);
 const camera = new THREE.PerspectiveCamera(44, 9 / 16, 0.5, 500);
 const coarse = matchMedia('(pointer: coarse)').matches;
-let stageW = 360, quality = coarse ? 0 : 2, autoQ = !coarse;   // quality: 2 = full, 1 = lighter, 0 = no post / no shadows
+let stageW = 360, quality = coarse ? 0 : 1, autoQ = true;   // quality: 2 = full, 1 = lighter, 0 = no post / no shadows
 
 const FLOAT_OK = renderer.capabilities.isWebGL2 && renderer.extensions.has('EXT_color_buffer_float');
 const post = { rt: null, lv: [], w: 0, h: 0 };
@@ -200,7 +200,7 @@ const matOut = fsMat(`uniform sampler2D t, b0, b1, b2, b3; uniform float bloom, 
 function fsPass(mat, target) { fsMesh.material = mat; renderer.setRenderTarget(target); renderer.render(fsScene, fsCam); }
 function setupPost() {
   if (post.rt) { post.rt.dispose(); for (const L of post.lv) { L.a.dispose(); L.b.dispose(); } post.rt = null; post.lv.length = 0; }
-  if (quality === 0) return;
+  if (quality < 2) return;
   const s = renderer.getDrawingBufferSize(new THREE.Vector2()), type = FLOAT_OK ? THREE.HalfFloatType : THREE.UnsignedByteType;
   post.w = s.x; post.h = s.y;
   post.rt = new THREE.WebGLRenderTarget(s.x, s.y, { type, samples: renderer.capabilities.isWebGL2 ? 4 : 0 });
@@ -213,7 +213,7 @@ function setupPost() {
   matPre.uniforms.thr.value = FLOAT_OK ? 1.22 : 0.86;
 }
 function renderFrame() {
-  if (quality > 0 && post.rt) {
+  if (post.rt) {
     renderer.setRenderTarget(post.rt); renderer.render(scene, camera);
     let src = post.rt.texture, sw = post.w, sh = post.h;
     for (let i = 0; i < 4; i++) {
@@ -235,8 +235,11 @@ function resize() {
   stage.style.width = w + 'px'; stage.style.height = h + 'px';
   stage.style.fontSize = (w / 34) + 'px';
   stageW = w;
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, quality >= 2 ? 2 : 1.25));
-  renderer.setSize(w, h, false);
+  const ratio = Math.min(window.devicePixelRatio || 1, quality === 2 ? 2 : quality === 1 ? 1.25 : 1, quality === 0 ? 720 / h : Infinity);
+  const size = renderer.getSize(new THREE.Vector2());
+  if (size.x !== w || size.y !== h || renderer.getPixelRatio() !== ratio) {
+    renderer.setDrawingBufferSize(w, h, ratio);
+  }
   setupPost();
 }
 window.addEventListener('resize', resize);
@@ -266,7 +269,7 @@ const beamLight = new THREE.PointLight(0xff3fd0, 0, 20, 1.5); scene.add(beamLigh
 function setQuality(q) {
   quality = q;
   sun.castShadow = q > 0;
-  sun.shadow.mapSize.set(q >= 2 ? 2048 : 1024, q >= 2 ? 4096 : 2048);
+  sun.shadow.mapSize.set(q >= 2 ? 2048 : 512, q >= 2 ? 4096 : 1024);
   if (sun.shadow.map) { sun.shadow.map.dispose(); sun.shadow.map = null; }
   resize();
   const bq = document.getElementById('bQual'); if (bq) bq.textContent = ['低画质', '中画质', '高画质'][q];
@@ -1053,7 +1056,9 @@ mGib.castShadow = true;
 const gbX = new Float32Array(MAXG), gbY = new Float32Array(MAXG), gbZ = new Float32Array(MAXG), gbVX = new Float32Array(MAXG), gbVY = new Float32Array(MAXG), gbVZ = new Float32Array(MAXG), gbL = new Float32Array(MAXG), gbS = new Float32Array(MAXG), gbF = new Float32Array(MAXG), gbA = new Float32Array(MAXG), gbC = new Float32Array(MAXG * 3);
 const _gc = new THREE.Color();
 function gibs(x, y, d, n, spd, size, cols, flat = 1) {
-  for (let i = 0; i < n && GB < MAXG; i++, GB++) {
+  const limit = quality === 0 ? 90 : MAXG;
+  if (quality === 0) n = Math.ceil(n * 0.5);
+  for (let i = 0; i < n && GB < limit; i++, GB++) {
     const a = Math.random() * TAU, s = spd * (0.35 + Math.random() * 0.65);
     gbX[GB] = x + rand(-0.4, 0.4); gbY[GB] = y * (0.4 + Math.random() * 0.9); gbZ[GB] = -d + rand(-0.4, 0.4);
     gbVX[GB] = Math.cos(a) * s; gbVZ[GB] = Math.sin(a) * s; gbVY[GB] = spd * (0.5 + Math.random() * 0.9);
@@ -1102,7 +1107,9 @@ const mMist = (() => {
   m.frustumCulled = false; m.count = 0; m.renderOrder = 7; scene.add(m); return m;
 })();
 function mist(x, y, d, n, spd, size, life, up, r, g, b, a, grow = 1.2, grav = 0) {
-  for (let i = 0; i < n && MS < MAXM; i++, MS++) {
+  const limit = quality === 0 ? 160 : MAXM;
+  if (quality === 0) n = Math.ceil(n * 0.5);
+  for (let i = 0; i < n && MS < limit; i++, MS++) {
     const an = Math.random() * TAU, s = spd * (0.3 + Math.random() * 0.7);
     msX[MS] = x; msY[MS] = y; msZ[MS] = -d; msVX[MS] = Math.cos(an) * s; msVZ[MS] = Math.sin(an) * s; msVY[MS] = up * (0.5 + Math.random() * 0.7);
     msL[MS] = 0; msM[MS] = life * (0.7 + Math.random() * 0.5); msS[MS] = size * (0.7 + Math.random() * 0.6); msG[MS] = grow; msA[MS] = a; msGr[MS] = grav;
@@ -1373,7 +1380,9 @@ const ptX = new Float32Array(MAXPT), ptY = new Float32Array(MAXPT), ptZ = new Fl
   ptL = new Float32Array(MAXPT), ptM = new Float32Array(MAXPT), ptS = new Float32Array(MAXPT), ptR = new Float32Array(MAXPT), ptG = new Float32Array(MAXPT), ptB = new Float32Array(MAXPT), ptGr = new Float32Array(MAXPT);
 const hdr = c => Math.pow(Math.min(c, 2.5) / 2.5, 2.2) * 2.3;
 function burst(x, y, d, n, spd, r, g, b, size, life, grav = 0, up = 0) {
-  for (let i = 0; i < n && PT < MAXPT; i++, PT++) {
+  const limit = quality === 0 ? 600 : MAXPT;
+  if (quality === 0) n = Math.ceil(n * 0.5);
+  for (let i = 0; i < n && PT < limit; i++, PT++) {
     const a = Math.random() * TAU, e = Math.random() * 2 - 1, s = spd * (0.35 + Math.random() * 0.65), c = Math.sqrt(1 - e * e);
     ptX[PT] = x; ptY[PT] = y; ptZ[PT] = -d; ptVX[PT] = Math.cos(a) * c * s; ptVY[PT] = Math.abs(e) * s + up; ptVZ[PT] = Math.sin(a) * c * s;
     ptL[PT] = ptM[PT] = life * (0.6 + Math.random() * 0.4); ptS[PT] = size * (0.6 + Math.random() * 0.6); ptR[PT] = hdr(r); ptG[PT] = hdr(g); ptB[PT] = hdr(b); ptGr[PT] = grav;
@@ -2469,7 +2478,7 @@ function draw(rdt) {
   mSold.instanceMatrix.needsUpdate = true; sAnim.needsUpdate = true;
   // enemies: animated skeleton up close, cheap rigid model in the distance
   const ea = mEnemy.instanceMatrix.array, fa = mEnemyFar.instanceMatrix.array, ec = mEnemy.instanceColor.array, fc = mEnemyFar.instanceColor.array, en = eAnim.array;
-  let frontD = 1e9, ne = 0, nfar = 0; const lodD = D + (quality >= 2 ? 42 : 24), mar = LV === 2 && run;
+  let frontD = 1e9, ne = 0, nfar = 0; const lodD = D + (quality === 2 ? 42 : quality === 1 ? 24 : 13), mar = LV === 2 && run;
   for (let i = 0; i < E; i++) {
     const ch = eSt[i] === 1, far = eD[i] > lodD, tint = 0.78 + ((ePh[i] * 7.31) % 1) * 0.36, scl = 0.94 + (ePh[i] % 1) * 0.14;
     const ang = ch ? Math.atan2(X - eX[i], eD[i] - D) : Math.sin(time * 2 + ePh[i]) * (mar ? 0.1 : 0.25);
@@ -2613,9 +2622,16 @@ function frame(now) {
   const raw = (now - lastT) / 1000;
   let rdt = Math.min(0.05, raw); lastT = now;
   if (rdt <= 0) rdt = 1 / 60;
-  if (autoQ && raw < 0.25 && document.visibilityState === 'visible') { // step quality down if the device cannot keep up
+  if (autoQ && quality > 0 && raw < 1 && document.visibilityState === 'visible') { // step quality down if the device cannot keep up
     warm += raw;
-    if (warm > 2.5) { fAcc += raw; fN++; if (fN >= 100) { if (fAcc / fN > 0.0235 && quality > 0) { setQuality(quality - 1); warm = 0; } fAcc = fN = 0; } }
+    if (warm > 1.5) {
+      fAcc += raw;
+      fN++;
+      if (fAcc >= 1.25 && fN >= 8) {
+        if (fAcc / fN > 0.027) { setQuality(quality - 1); warm = 0; }
+        fAcc = fN = 0;
+      }
+    }
   }
   if (slowT > 0) { slowT -= rdt; if (slowT <= 0) timeScale = 1; }
   let dt = rdt * timeScale;
