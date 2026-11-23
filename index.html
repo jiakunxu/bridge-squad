@@ -854,126 +854,121 @@ const SOLD_S = 1.25, ENEMY_S = 1.2;
 // skeleton joints: 0 root, 1 waist, 2 neck, 3/4 left shoulder/elbow, 5/6 right shoulder/elbow, 7/8 left hip/knee, 9/10 right hip/knee
 const SOLD_PIV = [[0, 0, 0], [0, 0.4, 0], [0, 0.71, 0], [-0.245, 0.64, 0], [-0.245, 0.49, 0], [0.245, 0.64, 0], [0.245, 0.49, 0], [-0.1, 0.37, 0], [-0.1, 0.2, 0], [0.1, 0.37, 0], [0.1, 0.2, 0]];
 const ENEMY_PIV = [[0, 0, 0], [0, 0.36, 0], [0, 0.66, 0], [-0.27, 0.6, 0], [-0.3, 0.44, 0], [0.27, 0.6, 0], [0.3, 0.44, 0], [-0.11, 0.32, 0], [-0.11, 0.17, 0], [0.11, 0.32, 0], [0.11, 0.17, 0]];
-function soldierParts(laser) {
-  const blue = 0x2b7bff, deep = 0x1648c8, lite = 0x6db6ff, blue2 = 0x3f8cff, skin = 0xffc999, navy = 0x1a3070, dark = 0x121829, white = 0xf1f5fc, steel = 0x3a4152;
-  const pink = laser === 2 ? [0.25, 1.35, 2.1] : [1.9, 0.08, 1.1], acc = laser ? pink : white, FA = Math.PI * 1.5, HP = Math.PI / 2;
-  const A = [
-    bone(part(capG(0.19, 0.14, 3, 8), blue, 0, 0.54, 0, 0, 0, 0, 1.12, 1, 0.95), 1),
-    bone(part(sphG(0.15, 8, 5), lite, 0, 0.57, -0.145, 0, 0, 0, 1, 0.8, 0.42), 1),
-    bone(part(cylG(0.205, 0.205, 0.055, 10), dark, 0, 0.41, 0), 0),
-    bone(part(boxG(0.08, 0.06, 0.03), [1.5, 1.0, 0.18], 0, 0.41, -0.2), 0),
-    bone(part(sphG(0.105, 6, 4), white, -0.255, 0.66, 0, 0, 0, 0, 1.05, 0.85, 1.05), 3, 1), bone(part(sphG(0.105, 6, 4), white, 0.255, 0.66, 0, 0, 0, 0, 1.05, 0.85, 1.05), 5, 1),
-    bone(part(sphG(0.245, 12, 6, 0, TAU, 0, 1.9), blue, 0, 0.87, 0), 2, 1),
-    bone(part(cylG(0.252, 0.264, 0.045, 12), deep, 0, 0.815, 0), 2, 1),
-    bone(part(torG(0.248, 0.024, 4, 10, Math.PI), acc, 0, 0.87, 0, 0, HP, 0), 2, 1),
-    bone(part(sphG(0.257, 7, 3, FA - 0.95, 1.9, 1.2, 0.56), 0x0d1a3a, 0, 0.87, 0), 2, 1),
-    bone(part(cylG(0.06, 0.06, 0.05, 6), white, -0.245, 0.84, 0, 0, 0, HP), 2, 1), bone(part(cylG(0.06, 0.06, 0.05, 6), white, 0.245, 0.84, 0, 0, 0, HP), 2, 1),
-    bone(part(capG(0.09, 0.12, 3, 8), deep, 0, 0.54, 0.19, 0, 0, 0, 1.5, 1, 0.85), 1),
-    bone(part(cylG(0.045, 0.045, 0.22, 6), acc, -0.075, 0.56, 0.275), 1), bone(part(cylG(0.045, 0.045, 0.22, 6), acc, 0.075, 0.56, 0.275), 1),
-    bone(part(cylG(0.008, 0.008, 0.26, 4), dark, 0.12, 0.8, 0.2), 1), bone(part(sphG(0.024, 5, 3), [2.2, 0.6, 0.1], 0.12, 0.94, 0.2), 1),
-    bone(part(sphG(0.055, 5, 3), blue, -0.1, 0.2, -0.06), 8, 7), bone(part(sphG(0.055, 5, 3), blue, 0.1, 0.2, -0.06), 10, 9),
-    bone(part(sphG(0.085, 6, 4), dark, -0.1, 0.055, -0.035, 0, 0, 0, 1, 0.72, 1.55), 8, 7), bone(part(sphG(0.085, 6, 4), dark, 0.1, 0.055, -0.035, 0, 0, 0, 1, 0.72, 1.55), 10, 9),
-  ];
-  const B = [
-    bone(part(sphG(0.17, 8, 5), navy, 0, 0.385, 0, 0, 0, 0, 1.1, 0.6, 0.92), 0),
-    bone(part(sphG(0.165, 8, 5), skin, 0, 0.8, -0.015), 2, 1),
-    bone(part(capG(0.07, 0.09, 2, 6), navy, -0.1, 0.285, 0), 7), bone(part(capG(0.07, 0.09, 2, 6), navy, 0.1, 0.285, 0), 9),
-    bone(part(capG(0.06, 0.07, 2, 6), navy, -0.1, 0.13, 0), 8, 7), bone(part(capG(0.06, 0.07, 2, 6), navy, 0.1, 0.13, 0), 10, 9),
-    bone(part(capG(0.055, 0.09, 2, 6), blue, -0.245, 0.565, 0), 3, 1), bone(part(capG(0.055, 0.09, 2, 6), blue, 0.245, 0.565, 0), 5, 1),
-    bone(part(capG(0.052, 0.08, 2, 6), blue2, -0.245, 0.41, 0), 4, 3, 1), bone(part(capG(0.052, 0.08, 2, 6), blue2, 0.245, 0.41, 0), 6, 5, 1),
-    bone(part(sphG(0.065, 6, 4), dark, -0.245, 0.335, 0), 4, 3, 1), bone(part(sphG(0.065, 6, 4), dark, 0.245, 0.335, 0), 6, 5, 1),
-    // rifle: modelled pointing down along the right forearm, so the aim pose swings it level
-    bone(part(boxG(0.06, 0.1, 0.075), dark, 0.245, 0.46, -0.08), 6, 5, 1),
-    bone(part(boxG(0.04, 0.12, 0.04), dark, 0.245, 0.3, -0.155), 6, 5, 1),
-  ];
-  if (laser) B.push(
-    bone(part(boxG(0.1, 0.3, 0.11), 0xe9eef7, 0.245, 0.27, -0.09), 6, 5, 1),
-    bone(part(cylG(0.072, 0.072, 0.04, 8), pink, 0.245, 0.17, -0.09), 6, 5, 1), bone(part(cylG(0.072, 0.072, 0.04, 8), pink, 0.245, 0.09, -0.09), 6, 5, 1),
-    bone(part(cylG(0.06, 0.04, 0.16, 8), pink, 0.245, 0.0, -0.09), 6, 5, 1), bone(part(sphG(0.05, 6, 4), laser === 2 ? [0.7, 2.4, 3] : [3, 0.4, 2], 0.245, -0.1, -0.09), 6, 5, 1));
-  else B.push(
-    bone(part(boxG(0.075, 0.3, 0.095), steel, 0.245, 0.27, -0.085), 6, 5, 1),
-    bone(part(cylG(0.024, 0.024, 0.26, 6), 0x6a7286, 0.245, 0.0, -0.09), 6, 5, 1));
-  return [merge(A, SOLD_S, 0.4), merge(B, SOLD_S, 0.4)];
-}
-// stage 2: after a rescue every soldier becomes a pocket-sized copy of the freed hero - same armour, crest, scarf and shoulder cannon
-function miniHeroParts(v) {
-  const arm = v ? 0xeef1fa : 0x1f66ff, lite = v ? 0xff86d8 : 0x86c6ff, navy = v ? 0x3b2a63 : 0x15296a, scarf = v ? 0x7a3cff : 0xff2c4e, gold = [1.0, 0.7, 0.14], skin = 0xffcf9f, white = 0xf2f6ff, metal = 0x2c313d;
-  const glow = v ? [3.0, 0.35, 2.0] : [0.3, 2.2, 3.0], HP = Math.PI / 2, FA = Math.PI * 1.5, CX = 0.4, CY = 0.85;
-  const star = new THREE.Shape(); for (let i = 0; i < 10; i++) { const r = i % 2 ? 0.03 : 0.072, a = i / 10 * TAU + HP; if (i) star.lineTo(Math.cos(a) * r, Math.sin(a) * r); else star.moveTo(Math.cos(a) * r, Math.sin(a) * r); }
-  const A = [
-    // chest armour, plate with the gold star, belt
-    bone(part(capG(0.2, 0.14, 3, 8), arm, 0, 0.54, 0, 0, 0, 0, 1.18, 1, 0.98), 1),
-    bone(part(sphG(0.15, 8, 5), lite, 0, 0.57, -0.15, 0, 0, 0, 1, 0.8, 0.42), 1),
-    bone(part(new THREE.ExtrudeGeometry(star, { depth: 0.025, bevelEnabled: false }), gold, 0, 0.585, -0.2, 0, Math.PI, 0), 1),
-    bone(part(cylG(0.212, 0.212, 0.06, 10), gold, 0, 0.41, 0), 0),
-    bone(part(boxG(0.085, 0.07, 0.03), [1.5, 1.0, 0.18], 0, 0.41, -0.205), 0),
-    // helmet: gold band, glowing visor, crest and side fins
-    bone(part(sphG(0.245, 12, 6, 0, TAU, 0, 1.9), arm, 0, 0.87, 0), 2, 1),
-    bone(part(cylG(0.252, 0.264, 0.045, 12), gold, 0, 0.815, 0), 2, 1),
-    bone(part(sphG(0.258, 7, 2, FA - 0.85, 1.7, 1.42, 0.3), glow, 0, 0.87, 0), 2, 1),
-    bone(part(boxG(0.045, 0.2, 0.4), gold, 0, 1.12, 0.03), 2, 1),
-    bone(part(boxG(0.035, 0.18, 0.24), gold, -0.262, 0.985, 0.05, 0, 0, 0.5), 2, 1), bone(part(boxG(0.035, 0.18, 0.24), gold, 0.262, 0.985, 0.05, 0, 0, -0.5), 2, 1),
-    // backpack
-    bone(part(capG(0.09, 0.12, 3, 8), arm, 0, 0.54, 0.19, 0, 0, 0, 1.5, 1, 0.85), 1),
-    bone(part(cylG(1, 1, 1, 10), gold, 0, 0.54, 0.19, 0, 0, 0, 0.142, 0.035, 0.083), 1),
-    bone(part(cylG(0.055, 0.055, 0.03, 8), glow, 0, 0.54, 0.27, HP, 0, 0), 1),
-    // shoulder cannon, fixed to the torso
-    bone(part(cylG(0.098, 0.098, 0.56, 10), metal, CX, CY, -0.07, HP, 0, 0), 1),
-    bone(part(cylG(0.114, 0.114, 0.05, 10), gold, CX, CY, 0.1, HP, 0, 0), 1), bone(part(cylG(0.114, 0.114, 0.05, 10), gold, CX, CY, -0.2, HP, 0, 0), 1),
-    bone(part(cylG(0.13, 0.13, 0.11, 10), metal, CX, CY, -0.4, HP, 0, 0), 1),
-    bone(part(cylG(0.098, 0.098, 0.025, 10), glow, CX, CY, -0.46, HP, 0, 0), 1),
-    bone(part(boxG(0.05, 0.11, 0.065), metal, CX, CY - 0.11, -0.06), 1),
-    // legs: shin guards, gold knees, boots
-    bone(part(capG(0.066, 0.07, 2, 6), arm, -0.1, 0.13, 0), 8, 7), bone(part(capG(0.066, 0.07, 2, 6), arm, 0.1, 0.13, 0), 10, 9),
-    bone(part(sphG(0.052, 5, 3), gold, -0.1, 0.2, -0.065), 8, 7), bone(part(sphG(0.052, 5, 3), gold, 0.1, 0.2, -0.065), 10, 9),
-    bone(part(sphG(0.088, 6, 4), metal, -0.1, 0.055, -0.035, 0, 0, 0, 1, 0.72, 1.55), 8, 7), bone(part(sphG(0.088, 6, 4), metal, 0.1, 0.055, -0.035, 0, 0, 0, 1, 0.72, 1.55), 10, 9),
-  ];
-  for (const sd of [-1, 1]) {
-    const sh = sd < 0 ? 3 : 5, el = sd < 0 ? 4 : 6;
-    A.push(
-      bone(part(sphG(0.125, 8, 5), arm, sd * 0.275, 0.675, 0, 0, 0, 0, 1.05, 0.82, 1.05), 1),
-      bone(part(cylG(0.128, 0.128, 0.028, 8), gold, sd * 0.275, 0.628, 0), 1),
-      bone(part(capG(0.06, 0.09, 2, 6), arm, sd * 0.25, 0.565, 0), sh, 1),
-      bone(part(capG(0.058, 0.08, 2, 6), lite, sd * 0.25, 0.41, 0), el, sh, 1),
-      bone(part(cylG(0.068, 0.068, 0.028, 8), gold, sd * 0.25, 0.455, 0), el, sh, 1));
+// Salvage crew. Geometry is defined in the squad's bind pose so heroes and
+// their recruited miniature suits can share silhouettes across both rigs.
+function diverPieces(variant, heroSuit) {
+  const veteran = heroSuit && variant === 1, upgraded = !heroSuit && variant !== 0;
+  const suit = heroSuit ? (veteran ? 0xe9d7b9 : 0x188e93) : (upgraded ? 0xd46e46 : 0xf39b3c);
+  const shell = heroSuit ? (veteran ? 0x803f61 : 0x215764) : 0x254c5b;
+  const rubber = 0x172f40, bronze = 0xc9904f, glass = 0x123c51;
+  const lamp = veteran || (upgraded && variant === 1) ? [1.6,.22,.87] : [.12,1.65,1.5];
+  const parents = [[0],[1],[2,1],[3,1],[4,3,1],[5,1],[6,5,1],[7],[8,7],[9],[10,9]];
+  const pieces = [];
+  function put(j,geo,c,x,y,z,rx=0,ry=0,rz=0,sx=1,sy=1,sz=1,slot='') {
+    const p=bone(part(geo,c,x,y,z,rx,ry,rz,sx,sy,sz),...parents[j]);
+    p.slot=slot; pieces.push(p);
   }
-  const B = [
-    bone(part(sphG(0.17, 8, 5), navy, 0, 0.385, 0, 0, 0, 0, 1.1, 0.6, 0.92), 0),
-    bone(part(sphG(0.165, 8, 5), skin, 0, 0.8, -0.015), 2, 1),
-    bone(part(capG(0.07, 0.09, 2, 6), navy, -0.1, 0.285, 0), 7), bone(part(capG(0.07, 0.09, 2, 6), navy, 0.1, 0.285, 0), 9),
-    bone(part(torG(0.15, 0.045, 5, 10), scarf, 0, 0.725, 0, HP, 0, 0), 1),
-    bone(part(boxG(0.075, 0.18, 0.025), scarf, -0.17, 0.62, 0.14, -0.2, 0, 0.25), 1),
-    bone(part(sphG(0.07, 6, 4), white, -0.25, 0.33, 0), 4, 3, 1), bone(part(sphG(0.07, 6, 4), white, 0.25, 0.33, 0), 6, 5, 1),
-  ];
-  return [merge(A, SOLD_S, 0.4), merge(B, SOLD_S, 0.4)];
+  put(1,capG(.155,.145,2,8),suit,0,.535,0,0,0,0,1.16,1,1);
+  put(0,cylG(.18,.173,.068,8),rubber,0,.39,0);
+  put(1,boxG(.23,.14,.055),shell,0,.57,-.157);
+  put(1,boxG(.15,.032,.018),lamp,0,.59,-.19);
+  put(2,cylG(.235,.205,.09,10),bronze,0,.726,0);
+  const helmet=veteran?0xe9dac2:heroSuit?0x57b3aa:upgraded?0xffc36d:0xe8a755;
+  put(2,sphG(.232,12,8),helmet,0,.902,0,0,0,0,1,1.02,.97);
+  if (veteran || upgraded) {
+    put(2,boxG(.386,.155,.085),rubber,0,.925,-.15);
+    for (const s of [-1,1]){
+      put(2,cylG(.092,.095,.075,10),bronze,s*.103,.928,-.197,Math.PI/2);
+      put(2,cylG(.068,.068,.024,10),glass,s*.103,.928,-.239,Math.PI/2);
+      put(2,boxG(.058,.016,.009),lamp,s*.103-.011,.955,-.252);
+    }
+    put(2,boxG(.14,.058,.07),shell,0,.797,-.19);
+  } else {
+    put(2,cylG(.165,.178,.095,12),bronze,0,.915,-.16,Math.PI/2);
+    put(2,cylG(.138,.14,.026,12),glass,0,.915,-.217,Math.PI/2);
+    put(2,boxG(.12,.023,.01),lamp,-.035,.966,-.235,0,0,-.22);
+    put(2,boxG(.105,.035,.055),rubber,0,.775,-.179);
+  }
+  put(2,cylG(.071,.073,.092,8),shell,0,1.123,-.015,Math.PI/2);
+  put(2,cylG(.052,.052,.014,8),lamp,0,1.123,-.067,Math.PI/2);
+  for (const s of [-1,1]){
+    const arm=s<0?3:5,fore=arm+1,leg=s<0?7:9,shin=leg+1;
+    put(2,cylG(.069,.069,.055,8),shell,s*.224,.878,0,0,0,Math.PI/2);
+    put(1,capG(.073,.21,2,8),heroSuit?helmet:0x63ada8,s*.095,.56,.188);
+    put(1,cylG(.076,.076,.057,8),rubber,s*.095,.558,.188);
+    put(1,cylG(.027,.031,.057,6),bronze,s*.095,.73,.188);
+    put(arm,capG(.065,.09,2,6),suit,s*.24,.564,0);
+    put(arm,sphG(.098,8,5),shell,s*.247,.642,0,0,0,0,1,.7,1);
+    put(fore,capG(.062,.08,2,6),rubber,s*.244,.41,0);
+    put(fore,cylG(.069,.069,.038,6),bronze,s*.244,.39,0);
+    put(fore,sphG(.069,6,4),suit,s*.244,.318,0);
+    put(leg,capG(.079,.081,2,6),rubber,s*.104,.291,0);
+    put(shin,capG(.07,.066,2,6),suit,s*.104,.138,0);
+    put(shin,boxG(.154,.080,.23),shell,s*.104,.047,-.038);
+    put(shin,boxG(.12,.037,.078),bronze,s*.104,.046,-.157);
+  }
+  if(heroSuit){
+    // The wide twin-intake suit and the ivory survey suit read differently from above.
+    for(const s of [-1,1]){
+      if(veteran){put(2,boxG(.05,.31,.17),shell,s*.218,1.08,.048,-.22,0,-s*.35);
+        put(2,boxG(.056,.06,.175),lamp,s*.258,1.196,.022,-.22,0,-s*.35)}
+      else{put(2,cylG(.071,.077,.2,8),bronze,s*.20,1.027,.058,0,0,-s*.2);
+        put(2,cylG(.057,.065,.054,8),lamp,s*.22,1.139,.058,0,0,-s*.2)}
+    }
+    put(1,boxG(.16,.16,.19),shell,.30,.70,0,0,0,0,1,1,1,'tool');
+    put(1,cylG(.124,.097,.49,10),shell,.36,.845,-.15,Math.PI/2,0,0,1,1,1,'tool');
+    for(const z of [-.28,-.12,.055])put(1,cylG(.133,.133,.038,10),bronze,.36,.845,z,Math.PI/2,0,0,1,1,1,'tool');
+    put(1,cylG(.09,.09,.026,10),lamp,.36,.845,-.403,Math.PI/2,0,0,1,1,1,'toolGlow');
+  }else{
+    put(6,boxG(.092,.24,.11),shell,.245,.263,-.105);
+    put(6,cylG(upgraded?.067:.038,.04,.19,8),upgraded?bronze:rubber,.245,.083,-.105);
+    put(6,cylG(.045,.04,.039,8),upgraded?lamp:0x76b6b1,.245,-.022,-.105);
+  }
+  return pieces;
 }
+function squadSuit(v,heroSuit) {
+  const p=diverPieces(v,heroSuit);
+  return [merge(p.filter(q=>q.b[0]<=2),SOLD_S,.28),merge(p.filter(q=>q.b[0]>2),SOLD_S,.28)];
+}
+function soldierParts(laser) { return squadSuit(laser,false); }
+function miniHeroParts(v) { return squadSuit(v,true); }
 function enemyGeo(hi) {
-  const red = 0xe0222e, hiC = 0xff4a44, dk = 0x8a1019, mid = 0xc21824, blk = 0x24090d, bone2 = 0xfff0c8, eye = [2.6, 1.9, 0.2], gold = 0xffc640;
-  if (!hi) return merge([part(cylG(0.2, 0.27, 0.46, 6), red, 0, 0.38, 0), part(sphG(0.21, 6, 4), hiC, 0, 0.84, 0.02), part(coneG(0.052, 0.22, 4), bone2, -0.15, 1.02, 0, 0, 0, 0.5), part(coneG(0.052, 0.22, 4), bone2, 0.15, 1.02, 0, 0, 0, -0.5), part(coneG(0.1, 0.22, 4), dk, -0.3, 0.68, 0, 0, 0, 0.7), part(coneG(0.1, 0.22, 4), dk, 0.3, 0.68, 0, 0, 0, -0.7), part(boxG(0.36, 0.12, 0.28), blk, 0, 0.07, 0.02)], 1.15, 0.35);
-  return merge([
-    bone(part(sphG(0.17, 8, 5), 0x5a0d14, 0, 0.33, 0, 0, 0, 0, 1.15, 0.62, 1), 0),
-    bone(part(boxG(0.09, 0.07, 0.04), gold, 0, 0.36, 0.17), 0), bone(part(boxG(0.14, 0.16, 0.03), blk, 0, 0.24, 0.16), 0),
-    bone(part(capG(0.2, 0.12, 3, 8), red, 0, 0.5, 0, 0, 0, 0, 1.2, 1, 1), 1),
-    bone(part(sphG(0.14, 6, 4), hiC, 0, 0.48, 0.16, 0, 0, 0, 1, 1, 0.5), 1),
-    bone(part(coneG(0.05, 0.16, 4), bone2, 0, 0.62, -0.2, -0.9, 0, 0), 1), bone(part(coneG(0.045, 0.14, 4), bone2, 0, 0.47, -0.22, -1.1, 0, 0), 1),
-    bone(part(sphG(0.115, 6, 4), 0x3a0a10, -0.29, 0.63, 0), 3, 1), bone(part(coneG(0.05, 0.18, 5), bone2, -0.33, 0.74, 0, 0, 0, 0.5), 3, 1),
-    bone(part(sphG(0.095, 6, 4), mid, 0.29, 0.62, 0), 5, 1),
-    bone(part(sphG(0.21, 10, 7), hiC, 0, 0.82, 0.02), 2, 1),
-    bone(part(sphG(0.15, 8, 4), mid, 0, 0.71, 0.1, 0, 0, 0, 1.15, 0.6, 1), 2, 1),
-    bone(part(coneG(0.028, 0.1, 4), bone2, -0.075, 0.78, 0.2), 2, 1), bone(part(coneG(0.028, 0.1, 4), bone2, 0.075, 0.78, 0.2), 2, 1),
-    bone(part(boxG(0.3, 0.05, 0.07), blk, 0, 0.915, 0.165, 0.25, 0, 0), 2, 1),
-    bone(part(boxG(0.075, 0.035, 0.03), eye, -0.085, 0.87, 0.2, 0, 0, -0.35), 2, 1), bone(part(boxG(0.075, 0.035, 0.03), eye, 0.085, 0.87, 0.2, 0, 0, 0.35), 2, 1),
-    bone(part(coneG(0.055, 0.24, 5), bone2, -0.15, 1.02, 0, 0, 0, 0.5), 2, 1), bone(part(coneG(0.055, 0.24, 5), bone2, 0.15, 1.02, 0, 0, 0, -0.5), 2, 1),
-    bone(part(coneG(0.05, 0.14, 4), red, -0.23, 0.85, 0, 0, 0, 1.35), 2, 1), bone(part(coneG(0.05, 0.14, 4), red, 0.23, 0.85, 0, 0, 0, -1.35), 2, 1),
-    bone(part(capG(0.065, 0.08, 2, 6), red, -0.285, 0.52, 0), 3, 1), bone(part(capG(0.065, 0.08, 2, 6), red, 0.285, 0.52, 0), 5, 1),
-    bone(part(capG(0.07, 0.07, 2, 6), mid, -0.3, 0.37, 0), 4, 3, 1), bone(part(capG(0.07, 0.07, 2, 6), mid, 0.3, 0.37, 0), 6, 5, 1),
-    bone(part(cylG(0.08, 0.08, 0.045, 6), blk, -0.3, 0.33, 0), 4, 3, 1), bone(part(cylG(0.08, 0.08, 0.045, 6), blk, 0.3, 0.33, 0), 6, 5, 1),
-    bone(part(sphG(0.108, 6, 4), dk, -0.3, 0.265, 0), 4, 3, 1), bone(part(sphG(0.108, 6, 4), dk, 0.3, 0.265, 0), 6, 5, 1),
-    bone(part(capG(0.08, 0.07, 2, 6), mid, -0.11, 0.245, 0), 7), bone(part(capG(0.08, 0.07, 2, 6), mid, 0.11, 0.245, 0), 9),
-    bone(part(capG(0.07, 0.06, 2, 6), dk, -0.11, 0.11, 0), 8, 7), bone(part(capG(0.07, 0.06, 2, 6), dk, 0.11, 0.11, 0), 10, 9),
-    bone(part(sphG(0.08, 6, 4), blk, -0.11, 0.04, 0.04, 0, 0, 0, 1, 0.6, 1.5), 8, 7), bone(part(sphG(0.08, 6, 4), blk, 0.11, 0.04, 0.04, 0, 0, 0, 1, 0.6, 1.5), 10, 9),
-  ], ENEMY_S, 0.4);
+  // Low and high detail share the shell, two claws and raised eye stalks.
+  const p=[],shell=0xc34b32,edge=0xf29353,joint=0x703947,eye=[1.5,.97,.26];
+  if (!hi) {
+    // Distant hordes share one low-poly mesh, including the frozen variant.
+    const facet=()=>new THREE.OctahedronGeometry(1);
+    const low=[part(sphG(.34,6,3),shell,0,.53,0,0,0,0,1.06,.72,.96)];
+    for(const side of [-1,1]){
+      low.push(part(facet(),edge,side*.345,.55,.13,0,0,0,.17,.13,.15),
+        part(coneG(.076,.20,3),shell,side*.41,.66,.16,0,0,-side*.36),
+        part(boxG(.038,.15,.038),joint,side*.15,.76,.14,0,0,-side*.25),
+        part(facet(),eye,side*.17,.855,.14,0,0,0,.069,.069,.069));
+      for(const z of [-.08,.08])low.push(part(coneG(.074,.47,3),joint,side*.29,.218,z,Math.PI,0,side*.52));
+    }
+    return merge(low,ENEMY_S,.28);
+  }
+  const put=(geo,col,x,y,z,j=0,par=0,rx=0,rz=0,sx=1,sy=1,sz=1)=>p.push(bone(part(geo,col,x,y,z,rx,0,rz,sx,sy,sz),j,par));
+  put(sphG(.34,9,5),shell,0,.53,0,1,0,0,0,1.06,.72,.96);
+  put(cylG(.245,.19,.13,8),joint,0,.36,0,1);
+  put(coneG(.18,.17,5),edge,0,.767,-.055,1,0,-.32);
+  for(const s of [-1,1]){
+    const arm=s<0?3:5,leg=s<0?7:9;
+    put(cylG(.026,.042,.19,5),joint,s*.147,.76,.135,2,1,0,-s*.25);
+    put(sphG(.069,7,4),eye,s*.171,.855,.14,2,1);
+    put(sphG(.039,5,3),0x251b2c,s*.171,.854,.189,2,1);
+    put(sphG(.132,7,4),edge,s*.349,.55,.125,arm,1,0,s*.20,1.22,.86,1.10);
+    put(coneG(.079,.226,5),shell,s*.416,.668,.163,arm,1,-.25,-s*.36);
+    put(coneG(.057,.141,5),0xffca86,s*.312,.655,.175,arm,1,-.22,s*.33);
+    const feet=3;
+    for(let k=0;k<feet;k++){
+      const z=(k-(feet-1)*.5)*.14;
+      put(coneG(.074,.47,4),joint,s*(.29+.018*k),.218,z,leg,0,Math.PI,s*.52);
+    }
+  }
+  return merge(p,ENEMY_S,.28);
 }
+
 const mkSoldA = (pose = POSE_SOLDIER, key = 'sk-sold') => rimmed(skinned(phys({ vertexColors: true, roughness: 0.3, metalness: 0.05, clearcoat: 0.85, clearcoatRoughness: 0.2, envMapIntensity: 0.6 }), SOLD_PIV, SOLD_S, pose, key), 0.1, 0.24, 0.5);
 const mkSoldB = (pose = POSE_SOLDIER, key = 'sk-sold') => rimmed(skinned(std({ vertexColors: true, roughness: 0.6, metalness: 0.0, envMapIntensity: 0.36 }), SOLD_PIV, SOLD_S, pose, key), 0.08, 0.18, 0.4);
 const mkEnemyHi = () => rimmed(skinned(std({ vertexColors: true, roughness: 0.36, metalness: 0.05, envMapIntensity: 0.52 }), ENEMY_PIV, ENEMY_S, POSE_ENEMY, 'sk-enemy'), 0.5, 0.12, 0.05);
@@ -1190,28 +1185,63 @@ function fancyText(x, text, cx, cy, px, fill, stroke, lw) {
   x.fillStyle = g; x.fillText(text, cx, cy);
   x.save(); x.globalCompositeOperation = 'source-atop'; x.fillStyle = 'rgba(255,255,255,0.22)'; x.fillRect(cx - px * 4, cy - px * 0.5, px * 8, px * 0.36); x.restore();
 }
+function crewEmblem(ctx, x, y, style) {
+  const veteran = style === 4, twin = veteran || style === 1 || style === 2;
+  ctx.save(); ctx.translate(x, y);
+  function disc(cx, cy, r, color) {
+    ctx.fillStyle = color; ctx.beginPath(); ctx.arc(cx, cy, r, 0, TAU); ctx.fill();
+  }
+  const brass = veteran ? '#e6d6b5' : style === 3 ? '#61c1b5' : '#efb768';
+  const signal = veteran || style === 1 ? '#ff8bc9' : '#91ffea';
+  disc(0, 0, 21, brass);
+  ctx.fillStyle = '#926642'; ctx.fillRect(-18, 13, 36, 7);
+  disc(0, -20, 5, '#365562'); disc(0, -20, 3, signal);
+  for (const lens of twin ? [-9, 9] : [0]) {
+    const r = twin ? 8 : 14;
+    disc(lens, 0, r + 2, '#9b754a'); disc(lens, 0, r, '#133d4c');
+    ctx.fillStyle = signal; ctx.fillRect(lens - r / 2, -r / 2, r, 3);
+  }
+  ctx.restore();
+}
+function reefEmblem(ctx, x, y, scale, kind) {
+  const shell = kind === 2 ? '#55aaa7' : kind === 1 ? '#d880aa' : '#fa9464';
+  ctx.save(); ctx.translate(x, y); ctx.scale(scale, scale);
+  ctx.fillStyle = shell; ctx.beginPath(); ctx.ellipse(0, 4, 15, 10, 0, 0, TAU); ctx.fill();
+  for (const side of [-1, 1]) {
+    ctx.save(); ctx.scale(side, 1);
+    ctx.strokeStyle = shell; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(6, -2); ctx.lineTo(8, -12); ctx.stroke();
+    ctx.fillStyle = '#ffe288'; ctx.beginPath(); ctx.arc(8, -12, 3.5, 0, TAU); ctx.fill();
+    ctx.fillStyle = shell; ctx.beginPath(); ctx.moveTo(10, 5); ctx.lineTo(22, 4);
+    ctx.lineTo(26, -7); ctx.lineTo(20, -3); ctx.lineTo(17, -10); ctx.lineTo(15, -1); ctx.closePath(); ctx.fill();
+    ctx.restore();
+  }
+  if (kind === 2) {
+    ctx.lineWidth = 2.3; ctx.strokeStyle = '#ffe2a1'; ctx.beginPath();
+    for (let i = 0; i <= 30; i++) {
+      const a = i * .28, r = 7 - i * .2, px = Math.cos(a) * r, py = 4 + Math.sin(a) * r;
+      if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+    }
+    ctx.stroke();
+  }
+  ctx.restore();
+}
 function drawPill(L, text, kind) { // glossy counter capsule with an icon badge
-  const key = kind + text; if (L.last === key) return; L.last = key;
+  const key = kind + text + (kind === 'enemy' ? '' : look); if (L.last === key) return; L.last = key;
   const x = L.ctx, w = L.w, h = L.h, red = kind === 'enemy'; x.clearRect(0, 0, w, h);
   const px = 14, py = 16, bw = w - 28, bh = h - 46, r = bh / 2, ix = px + r, iy = py + r;
   x.save(); x.shadowColor = 'rgba(0,8,40,0.55)'; x.shadowBlur = 14; x.shadowOffsetY = 9;
   const g = x.createLinearGradient(0, py, 0, py + bh);
-  if (red) { g.addColorStop(0, '#ff9272'); g.addColorStop(0.5, '#f0332b'); g.addColorStop(1, '#a30d1a'); } else { g.addColorStop(0, '#86d6ff'); g.addColorStop(0.5, '#2b7dff'); g.addColorStop(1, '#1144c4'); }
+  if (red) { g.addColorStop(0, '#ff9272'); g.addColorStop(0.5, '#f0332b'); g.addColorStop(1, '#a30d1a'); } else { g.addColorStop(0, '#90e4cf'); g.addColorStop(0.5, '#217f86'); g.addColorStop(1, '#175860'); }
   x.fillStyle = g; rr(x, px, py, bw, bh, r); x.fill(); x.restore();
   x.lineWidth = 7; x.strokeStyle = '#ffffff'; rr(x, px, py, bw, bh, r); x.stroke();
   x.lineWidth = 2.5; x.strokeStyle = red ? 'rgba(90,0,10,0.5)' : 'rgba(0,30,110,0.5)'; rr(x, px + 7, py + 7, bw - 14, bh - 14, r - 7); x.stroke();
   const gl = x.createLinearGradient(0, py + 6, 0, py + bh * 0.55); gl.addColorStop(0, 'rgba(255,255,255,0.6)'); gl.addColorStop(1, 'rgba(255,255,255,0.03)');
   x.fillStyle = gl; rr(x, px + 16, py + 10, bw - 32, bh * 0.4, bh * 0.2); x.fill();
-  x.fillStyle = red ? '#5a0a12' : '#0c2c86'; x.beginPath(); x.arc(ix, iy, r - 11, 0, TAU); x.fill();
+  x.fillStyle = red ? '#5a0a12' : '#143e48'; x.beginPath(); x.arc(ix, iy, r - 11, 0, TAU); x.fill();
   x.lineWidth = 3; x.strokeStyle = 'rgba(255,255,255,0.8)'; x.stroke();
-  if (red) { // horned head
-    x.fillStyle = '#ff5a48'; x.beginPath(); x.arc(ix, iy + 4, 17, 0, TAU); x.fill();
-    x.fillStyle = '#fff0c8'; for (const s of [-1, 1]) { x.beginPath(); x.moveTo(ix + s * 9, iy - 8); x.lineTo(ix + s * 22, iy - 24); x.lineTo(ix + s * 17, iy - 3); x.closePath(); x.fill(); }
-    x.fillStyle = '#ffe23a'; x.fillRect(ix - 11, iy + 1, 8, 4); x.fillRect(ix + 3, iy + 1, 8, 4);
-  } else { // helmet
-    x.fillStyle = '#ffffff'; x.beginPath(); x.arc(ix, iy + 3, 19, Math.PI, 0); x.closePath(); x.fill(); rr(x, ix - 24, iy + 3, 48, 9, 4); x.fill();
-    x.fillStyle = '#2b7dff'; x.fillRect(ix - 3, iy - 16, 6, 19);
-  }
+  if (red) reefEmblem(x, ix, iy, 1, -1);
+  else crewEmblem(x, ix, iy, look);
   fancyText(x, text, px + r * 2 + (bw - r * 2) / 2 - 10, iy + 3, bh * 0.66, '#ffffff', red ? '#5a0a12' : '#0b2f8f', 13);
   L.tex.needsUpdate = true;
 }
@@ -1237,11 +1267,7 @@ function drawBossBar(L, hp, max, ghost, kind) { // framed health bar with a lagg
   const ex = 52, ey = by + bh / 2;
   x.save(); x.shadowColor = 'rgba(0,0,0,0.5)'; x.shadowBlur = 8; x.shadowOffsetY = 4; x.fillStyle = '#2a0a10'; x.beginPath(); x.arc(ex, ey, 40, 0, TAU); x.fill(); x.restore();
   x.lineWidth = 6; x.strokeStyle = fg; x.beginPath(); x.arc(ex, ey, 40, 0, TAU); x.stroke();
-  x.fillStyle = '#ff5a48'; x.beginPath(); x.arc(ex, ey + 5, 21, 0, TAU); x.fill();
-  x.fillStyle = '#fff0c8'; for (const s of [-1, 1]) { x.beginPath(); x.moveTo(ex + s * 11, ey - 10); x.lineTo(ex + s * 29, ey - 30); x.lineTo(ex + s * 21, ey - 2); x.closePath(); x.fill(); }
-  x.fillStyle = '#ffe23a'; x.fillRect(ex - 14, ey + 1, 10, 5); x.fillRect(ex + 4, ey + 1, 10, 5);
-  x.fillStyle = '#2a0a10'; x.fillRect(ex - 9, ey + 14, 18, 4);
-  if (kind === 2) { x.fillStyle = '#ffd21f'; x.strokeStyle = '#84490a'; x.lineWidth = 3; x.beginPath(); x.moveTo(ex - 22, ey - 34); x.lineTo(ex - 26, ey - 60); x.lineTo(ex - 11, ey - 46); x.lineTo(ex, ey - 64); x.lineTo(ex + 11, ey - 46); x.lineTo(ex + 26, ey - 60); x.lineTo(ex + 22, ey - 34); x.closePath(); x.fill(); x.stroke(); }
+  reefEmblem(x, ex, ey, 1.28, kind);
   fancyText(x, String(Math.max(0, Math.ceil(hp))), w / 2 + 34, 58, 100, '#ffffff', '#2a0a0e', 20);
   L.tex.needsUpdate = true;
 }
@@ -1402,60 +1428,39 @@ function drawCageBar() {
   lblCage.tex.needsUpdate = true;
 }
 
-function makeHero(v) { // v = 0: the blue trooper, 1: the white-and-magenta veteran of stage 2
-  const hero = { v, state: 'off', x: CAGE_X, d: CAGE_D, y: 0, x0: 0, d0: 0, y0: 0, pop: 1, jt: 0, kt: 0, kvx: 0, kvy: 0, kvd: 0, land: 0, cd: 0, kick: 0, mesh: new THREE.Group(), torso: null, head: null, arms: [], legs: [], cannon: null, glowMat: null };
-  const g = hero.mesh; scene.add(g); g.visible = false;
-  const R = (m) => rimmed(m, 0.12, 0.3, 0.6);
-  const blue = R(phys({ color: v ? 0xeef1fa : 0x1f66ff, roughness: 0.28, metalness: 0.2, clearcoat: 1, clearcoatRoughness: 0.15, envMapIntensity: 0.9 })), lite = R(phys({ color: v ? 0xff86d8 : 0x86c6ff, roughness: 0.28, metalness: 0.15, clearcoat: 1, clearcoatRoughness: 0.15, envMapIntensity: 0.9 })), gold = std({ color: 0xffc531, roughness: 0.22, metalness: 1, envMapIntensity: 1.1 }),
-    skin = R(std({ color: 0xffcf9f, roughness: 0.6, metalness: 0 })), white = R(std({ color: 0xf2f6ff, roughness: 0.4, metalness: 0 })), navy = R(std({ color: v ? 0x3b2a63 : 0x15296a, roughness: 0.55, metalness: 0 })), red = std({ color: v ? 0x7a3cff : 0xff2c4e, roughness: 0.6, metalness: 0 }), metal = std({ color: 0x2c313d, roughness: 0.32, metalness: 0.85, envMapIntensity: 1 });
-  hero.glowMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(0.25, 2.2, 3.0) });
-  const add = (p, geo, mat, x, y, z, sx = 1, sy = 1, sz = 1, rx = 0, ry = 0, rz = 0) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); m.scale.set(sx, sy, sz); m.rotation.set(rx, ry, rz); m.castShadow = true; p.add(m); return m; };
-  const star = new THREE.Shape(); for (let i = 0; i < 10; i++) { const r = i % 2 ? 0.045 : 0.105, a = i / 10 * TAU + Math.PI / 2; if (i) star.lineTo(Math.cos(a) * r, Math.sin(a) * r); else star.moveTo(Math.cos(a) * r, Math.sin(a) * r); }
-  const starG = new THREE.ExtrudeGeometry(star, { depth: 0.03, bevelEnabled: false });
-  // pelvis + legs (hip -> knee -> boot)
-  add(g, U.s16, navy, 0, 0.45, 0, 0.25, 0.14, 0.2);
-  add(g, U.cyl, gold, 0, 0.5, 0, 0.255, 0.06, 0.205);
-  add(g, U.box, gold, 0, 0.5, -0.2, 0.1, 0.09, 0.03);
-  for (const s of [-1, 1]) {
-    const leg = new THREE.Group(); leg.position.set(s * 0.14, 0.44, 0); g.add(leg);
-    add(leg, U.cap, navy, 0, -0.1, 0, 0.2, 0.12, 0.2);
-    const shin = new THREE.Group(); shin.position.set(0, -0.2, 0); leg.add(shin); leg.userData.shin = shin; hero.legs.push(leg);
-    add(shin, U.s8, gold, 0, 0, -0.08, 0.075, 0.075, 0.05);
-    add(shin, U.cap, blue, 0, -0.1, 0, 0.19, 0.1, 0.19);
-    add(shin, U.s16, metal, 0, -0.2, -0.045, 0.115, 0.085, 0.18);
-    add(shin, U.cyl, gold, 0, -0.12, 0, 0.1, 0.03, 0.1);
+function makeHero(v) {
+  const g=new THREE.Group(),joints=[g],parents=[0,0,1,1,3,1,5,0,7,0,9];
+  for(let j=1;j<SOLD_PIV.length;j++){
+    const node=new THREE.Group(),p=parents[j],a=SOLD_PIV[j],b=SOLD_PIV[p];
+    node.position.set(a[0]-b[0],a[1]-b[1],a[2]-b[2]);joints[p].add(node);joints.push(node);
   }
-  // upper body pivots at the waist
-  const t = new THREE.Group(); t.position.set(0, 0.5, 0); g.add(t); hero.torso = t;
-  add(t, U.cap, blue, 0, 0.22, 0, 0.56, 0.21, 0.42);
-  add(t, U.s16, lite, 0, 0.26, -0.13, 0.23, 0.17, 0.11);
-  add(t, starG, gold, 0, 0.27, -0.24, 1, 1, 1, 0, Math.PI, 0);
-  add(t, U.ring, red, 0, 0.45, 0, 0.2, 0.2, 0.5, Math.PI / 2, 0, 0); add(t, U.box, red, -0.1, 0.34, 0.24, 0.09, 0.22, 0.03, -0.25, 0, 0.15);
-  add(t, U.cap, blue, 0, 0.22, 0.19, 0.34, 0.16, 0.2); add(t, U.cyl, gold, 0, 0.22, 0.19, 0.175, 0.04, 0.105); add(t, U.cyl, hero.glowMat, 0, 0.22, 0.3, 0.07, 0.03, 0.07, Math.PI / 2, 0, 0);
-  for (const s of [-1, 1]) {
-    add(t, U.s16, blue, s * 0.38, 0.43, 0, 0.2, 0.15, 0.2);
-    add(t, U.cyl, gold, s * 0.38, 0.37, 0, 0.205, 0.035, 0.205);
-    const arm = new THREE.Group(); arm.position.set(s * 0.43, 0.38, 0); t.add(arm); hero.arms.push(arm);
-    add(arm, U.cap, blue, 0, -0.09, 0, 0.15, 0.09, 0.15);
-    const fore = new THREE.Group(); fore.position.set(0, -0.17, 0); arm.add(fore); arm.userData.fore = fore;
-    add(fore, U.cap, lite, 0, -0.08, 0, 0.14, 0.085, 0.14); add(fore, U.cyl, gold, 0, -0.04, 0, 0.078, 0.03, 0.078); add(fore, U.s8, white, 0, -0.19, 0, 0.095, 0.095, 0.095);
+  const cannon=new THREE.Group();joints[1].add(cannon);
+  const glowMat=new THREE.MeshBasicMaterial({color:v ? new THREE.Color(3,.3,2) : new THREE.Color(.25,2.2,3)});
+  const groups=new Map();
+  for(const p of diverPieces(v,true)){
+    const j=p.b[0],pivot=SOLD_PIV[j];
+    p.g.translate(-pivot[0],-pivot[1],-pivot[2]);
+    const key=p.slot||j;
+    if(!groups.has(key))groups.set(key,[]);
+    groups.get(key).push(p);
   }
-  const h = new THREE.Group(); h.position.set(0, 0.56, 0); t.add(h); hero.head = h;
-  add(h, U.s16, skin, 0, 0.04, -0.01, 0.2, 0.2, 0.2);
-  add(h, U.helm, blue, 0, 0.07, 0, 0.25, 0.25, 0.25);
-  add(h, U.cyl, gold, 0, 0.02, 0, 0.256, 0.03, 0.256);
-  add(h, U.box, hero.glowMat, 0, 0.03, -0.205, 0.3, 0.075, 0.08);
-  add(h, U.box, gold, 0, 0.33, 0.03, 0.05, 0.2, 0.42);
-  for (const s of [-1, 1]) add(h, U.box, gold, s * 0.27, 0.19, 0.06, 0.04, 0.2, 0.26, 0, 0, -s * 0.5);
-  const can = new THREE.Group(); can.position.set(0.45, 0.6, 0); t.add(can); hero.cannon = can;
-  add(can, U.cyl, metal, 0, 0, -0.15, 0.13, 0.9, 0.13, Math.PI / 2, 0, 0);
-  add(can, U.cyl, gold, 0, 0, 0.12, 0.15, 0.06, 0.15, Math.PI / 2, 0, 0); add(can, U.cyl, gold, 0, 0, -0.3, 0.15, 0.06, 0.15, Math.PI / 2, 0, 0);
-  add(can, U.cyl, metal, 0, 0, -0.63, 0.165, 0.14, 0.165, Math.PI / 2, 0, 0);
-  add(can, U.cyl, hero.glowMat, 0, 0, -0.705, 0.12, 0.03, 0.12, Math.PI / 2, 0, 0);
-  add(can, U.box, metal, 0, -0.14, -0.1, 0.07, 0.16, 0.09);
-  g.scale.setScalar(2.2);
-  return hero;
+  const finish=rimmed(phys({vertexColors:true,roughness:.34,metalness:.22,clearcoat:.55}),.13,.25,.29);
+  for(const [key,pieces] of groups){
+    const m=new THREE.Mesh(merge(pieces,1,.23),key==='toolGlow'?glowMat:finish);
+    m.castShadow=true;(typeof key==='number'?joints[key]:cannon).add(m);
+  }
+  // A pair of outboard marker lamps distinguishes the full-size rescue leaders.
+  const marker=new THREE.MeshBasicMaterial({color:v?0xff9acd:0xbffff0});
+  for(const s of [-1,1]){
+    const lamp=new THREE.Mesh(U.s8,marker);lamp.position.set(s*.145,.10,.252);
+    lamp.scale.set(.038,.067,.026);joints[1].add(lamp);
+  }
+  joints[3].userData.fore=joints[4];joints[5].userData.fore=joints[6];
+  joints[7].userData.shin=joints[8];joints[9].userData.shin=joints[10];
+  g.scale.setScalar(2.55);scene.add(g);g.visible=false;
+  return {v,state:'off',x:CAGE_X,d:CAGE_D,y:0,x0:0,d0:0,y0:0,pop:1,jt:0,kt:0,kvx:0,kvy:0,kvd:0,land:0,cd:0,kick:0,mesh:g,torso:joints[1],head:joints[2],arms:[joints[3],joints[5]],legs:[joints[7],joints[9]],cannon,glowMat};
 }
+
 const heroes = [makeHero(0), makeHero(1)], hero = heroes[0];
 
 const crate = { state: 'none', x: 0, d: 0, y: 0, t: 0, x0: 0, d0: 0, x1: 0, d1: 0, mesh: null, glow: null };
@@ -1474,88 +1479,65 @@ const crate = { state: 'none', x: 0, d: 0, y: 0, t: 0, x0: 0, d0: 0, x1: 0, d1: 
 
 // bosses
 function makeBoss(kind) {
-  const pal = [
-    { skin: 0xe23a32, lite: 0xff7a5c, armor: 0x5b1a22, trim: 0xffc640, cloth: 0x2a1014, rim: [0.7, 0.22, 0.08] },
-    { skin: 0xd92f72, lite: 0xff7fae, armor: 0x47236e, trim: 0xffd24a, cloth: 0x1f1030, rim: [0.7, 0.2, 0.5] },
-    { skin: 0xc8201c, lite: 0xf2613c, armor: 0x23232e, trim: 0xffb31f, cloth: 0x5a0d14, rim: [0.9, 0.3, 0.06] }][kind];
-  const g = new THREE.Group(), mats = [];
-  const M = (c, rough, metal, env = 0.8, coat = 0) => { const m = rimmed(coat ? phys({ color: c, roughness: rough, metalness: metal, envMapIntensity: env, clearcoat: coat, clearcoatRoughness: 0.2 }) : std({ color: c, roughness: rough, metalness: metal, envMapIntensity: env }), pal.rim[0], pal.rim[1], pal.rim[2]); mats.push(m); return m; };
-  const skin = M(pal.skin, 0.44, 0, 0.8, 0.35), lite = M(pal.lite, 0.46, 0, 0.8, 0.35), armor = M(pal.armor, 0.3, 0.75, 1), trim = M(pal.trim, 0.22, 1, 1.1), bone = M(0xfff0d2, 0.35, 0), cloth = M(pal.cloth, 0.75, 0), dark = M(0x1c1012, 0.55, 0.2);
-  const eye = new THREE.MeshBasicMaterial({ color: new THREE.Color(4.5, 3.2, 0.5) }), gem = new THREE.MeshBasicMaterial({ color: new THREE.Color(4, 0.7, 0.15) });
-  const add = (p, geo, mat, x, y, z, sx = 1, sy = 1, sz = 1, rx = 0, ry = 0, rz = 0) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); m.scale.set(sx, sy, sz); m.rotation.set(rx, ry, rz); m.castShadow = true; p.add(m); return m; };
-  const body = new THREE.Group(); body.position.y = 1.5; g.add(body);   // pivots at the waist
-  const hips = new THREE.Group(); g.add(hips);
-  // hips, belt, armour skirt
-  add(hips, U.s16, cloth, 0, 1.3, 0, 0.92, 0.5, 0.78);
-  add(hips, U.cyl, armor, 0, 1.52, 0, 0.98, 0.26, 0.84);
-  add(hips, U.cyl, trim, 0, 1.52, 0.8, 0.27, 0.1, 0.27, Math.PI / 2, 0, 0);
-  add(hips, U.s8, gem, 0, 1.52, 0.86, 0.13, 0.13, 0.06);
-  for (const i of [-1, 0, 1]) { add(hips, U.box, armor, i * 0.44, 1.1, 0.66 - Math.abs(i) * 0.12, 0.38, 0.52, 0.08, -0.12, -i * 0.4, 0); add(hips, U.box, trim, i * 0.44, 0.86, 0.69 - Math.abs(i) * 0.12, 0.38, 0.06, 0.09, -0.12, -i * 0.4, 0); }
-  add(hips, U.box, cloth, 0, 1.0, -0.62, 1.0, 0.74, 0.08, 0.15, 0, 0);
-  // torso (coordinates relative to the waist pivot)
-  const Y = -1.5;
-  add(body, U.cyl, skin, 0, 1.95 + Y, 0, 0.9, 0.72, 0.74);
-  add(body, U.s16, skin, 0, 2.6 + Y, 0, 1.36, 0.92, 0.98);
-  for (const s of [-1, 1]) { add(body, U.s16, lite, s * 0.5, 2.64 + Y, 0.6, 0.54, 0.43, 0.38); add(body, U.s16, skin, s * 0.86, 2.2 + Y, 0.1, 0.34, 0.5, 0.6); }
-  for (let r = 0; r < 3; r++) for (const s of [-1, 1]) add(body, U.s8, lite, s * 0.2, 2.14 - r * 0.25 + Y, 0.68 - r * 0.02, 0.19, 0.125, 0.12);
-  add(body, U.s16, skin, 0, 3.12 + Y, -0.05, 0.62, 0.36, 0.5);
-  for (const s of [-1, 1]) add(body, U.s16, skin, s * 0.62, 3.02 + Y, -0.1, 0.5, 0.26, 0.42, 0, 0, s * 0.35);
-  add(body, U.ring, cloth, 0, 2.55 + Y, 0, 1.26, 1.26, 1.0, Math.PI / 2 - 0.25, 0.62, 0);
-  add(body, U.s8, trim, 0.52, 2.86 + Y, 0.8, 0.13, 0.13, 0.08);
-  add(body, U.s8, gem, 0, 2.3 + Y, 0.82, 0.16, 0.16, 0.08);
-  for (let i = 0; i < 4; i++) add(body, U.cone, bone, 0, 3.02 - i * 0.4 + Y, -0.88 - i * 0.02, 0.12, 0.46, 0.12, -1.25, 0, 0);
-  // head with a hinged jaw
-  const head = new THREE.Group(); head.position.set(0, 3.5 + Y, 0.2); body.add(head);
-  add(head, U.s16, skin, 0, 0, 0, 0.56, 0.56, 0.56);
-  add(head, U.s8, lite, 0, -0.06, 0.55, 0.12, 0.1, 0.1);
-  add(head, U.box, dark, 0, -0.26, 0.46, 0.4, 0.16, 0.2);
-  for (const i of [-1, 0, 1]) add(head, U.box, bone, i * 0.1, -0.2, 0.585, 0.07, 0.06, 0.03);
-  for (const s of [-1, 1]) {
-    add(head, U.s8, skin, s * 0.55, 0, 0, 0.1, 0.16, 0.12);
-    add(head, U.box, dark, s * 0.22, 0.17, 0.5, 0.3, 0.09, 0.12, 0, 0, -s * 0.38);
-    add(head, U.s8, eye, s * 0.21, 0.07, 0.5, 0.095, 0.06, 0.05);
-    add(head, U.cone, bone, s * 0.6, 0.32, 0, 0.15, 0.5, 0.15, 0, 0, -s * 1.05);
-    add(head, U.cone, bone, s * 0.9, 0.62, 0, 0.1, 0.5, 0.1, 0, 0, -s * 0.25);
+  const pal=[
+    {skin:0xb34833,lite:0xff9860,armor:0x783541,trim:0xffc570},
+    {skin:0x705085,lite:0xec87a2,armor:0x37495e,trim:0xa7dbcd},
+    {skin:0x1d606e,lite:0x4a9d9d,armor:0x173844,trim:0xe7ba74}
+  ][kind],g=new THREE.Group(),mats=[];
+  function material(c,metal=.08){const m=std({color:c,roughness:.37,metalness:metal});mats.push(m);return m}
+  const skin=material(pal.skin),shell=material(pal.lite,.23),plate=material(pal.armor,.19),rim=material(pal.trim,.31),dark=material(0x222937),shine=material(kind===2?0xacf9e6:0xffe390);
+  function joint(parent,x,y,z){const o=new THREE.Group();o.position.set(x,y,z);parent.add(o);return o}
+  function add(parent,geo,mat,x,y,z,sx,sy,sz,rx=0,ry=0,rz=0){
+    const o=new THREE.Mesh(geo,mat);o.position.set(x,y,z);o.rotation.set(rx,ry,rz);o.scale.set(sx,sy,sz);o.castShadow=true;parent.add(o);return o
   }
-  const jaw = new THREE.Group(); jaw.position.set(0, -0.18, 0.05); head.add(jaw);
-  add(jaw, U.s16, skin, 0, -0.1, 0.16, 0.5, 0.26, 0.42);
-  for (const s of [-1, 1]) add(jaw, U.cone, bone, s * 0.22, 0.06, 0.52, 0.065, 0.26, 0.065);
-  for (const i of [-1, 1]) add(jaw, U.box, bone, i * 0.07, -0.01, 0.55, 0.07, 0.06, 0.03);
-  if (kind === 0) for (let i = 0; i < 5; i++) { const z = 0.34 - i * 0.18; add(head, U.cone, dark, 0, Math.sqrt(0.31 - z * z) + 0.12, z, 0.09, 0.34, 0.09, -0.3 + i * 0.15, 0, 0); }
-  if (kind === 1) { add(head, U.dome, armor, 0, 0.12, -0.04, 0.6, 0.5, 0.6); add(head, U.box, trim, 0, 0.62, -0.06, 0.08, 0.34, 0.9); add(head, U.cyl, trim, 0, 0.14, -0.04, 0.61, 0.07, 0.61); }
-  if (kind === 2) {
-    add(head, U.cyl, trim, 0, 0.44, -0.02, 0.47, 0.2, 0.47);
-    for (let i = 0; i < 7; i++) { const a = i / 7 * TAU + Math.PI / 2; add(head, U.cone, trim, Math.cos(a) * 0.42, 0.72, -0.02 + Math.sin(a) * 0.42, 0.1, 0.38, 0.1); }
-    add(head, U.s8, new THREE.MeshBasicMaterial({ color: new THREE.Color(4, 0.3, 0.2) }), 0, 0.46, 0.45, 0.1, 0.1, 0.06);
-    const cape = M(0x8a0f1e, 0.7, 0); cape.side = THREE.DoubleSide;
-    add(body, U.box, cape, 0, 2.35 + Y, -1.0, 2.2, 1.5, 0.08, 0.16, 0, 0); add(body, U.box, cape, 0, 1.15 + Y, -1.22, 2.4, 1.4, 0.08, 0.3, 0, 0);
+  const body=joint(g,0,1.5,0),head=joint(body,0,1.42,.62),jaw=joint(head,0,-.47,.39);
+  const arms=[],fores=[],legs=[];
+  add(body,U.s16,skin,0,.65,-.06,1.33,.98,1.03);
+  add(body,U.s16,plate,0,1.26,-.16,1.65,.82,1.14);
+  add(body,U.dome,shell,0,1.31,-.18,1.64,.93,1.15);
+  for(let i=0;i<3;i++)add(body,U.s8,plate,0,.07+i*.29,.81,1.03-i*.11,.20,.19);
+  add(head,U.s16,skin,0,-.07,.22,.75,.53,.5);
+  for(const s of [-1,1]){
+    add(head,U.cyl,plate,s*.53,.37,.18,.10,.83,.10,0,0,-s*.36);
+    add(head,U.s8,rim,s*.67,.77,.18,.235,.23,.23);
+    add(head,U.s8,shine,s*.67,.79,.295,.183,.166,.16);
+    add(head,U.s8,dark,s*.67,.79,.451,.053,.095,.019);
+    add(jaw,U.cone,rim,s*.32,.04,.13,.12,.61,.12,.42,0,-s*.58);
+    for(let i=0;i<3;i++) add(body,U.cone,shell,s*(1.23+i*.10),1.48,-.71+i*.49,.24,.83,.23,.2,0,-s*1.0);
+    const arm=joint(body,s*1.36,1.30,.16),fore=joint(arm,s*.11,-.85,.11);arms.push(arm);fores.push(fore);
+    add(arm,U.s8,shell,0,-.08,0,.57,.57,.54);
+    add(arm,U.cap,plate,s*.06,-.49,.04,.65,.5,.57);
+    const bulk=kind===0&&s===1?1.23:1;
+    add(fore,U.s16,skin,0,-.29,.18,.72*bulk,.73,.61);
+    add(fore,U.dome,shell,0,-.25,.20,.74*bulk,.6,.64);
+    add(fore,U.cone,rim,s*.42,-1.01,.27,.30,.99,.32,Math.PI-.18,0,-s*.33);
+    add(fore,U.cone,shell,-s*.33,-.91,.21,.25,.85,.28,Math.PI-.22,0,s*.29);
+    const leg=joint(g,s*.56,1.20,-.12),shin=joint(leg,s*.22,-.57,0);leg.userData.shin=shin;legs.push(leg);
+    for(let k=0;k<3;k++){
+      const z=(k-1)*.53;
+      add(leg,U.cap,plate,s*.24,-.25,z,.40,.44,.37,0,0,s*.66);
+      add(shin,U.cone,skin,s*.20,-.27,z+.09,.23,.94,.23,Math.PI-.23,0,s*.52);
+    }
   }
-  const arms = [], fores = [], legs = [];
-  for (const s of [-1, 1]) {
-    add(body, U.dome, armor, s * 1.5, 2.88 + Y, 0, 0.74, 0.64, 0.74, 0, 0, -s * 0.35);
-    add(body, U.cyl, trim, s * 1.5, 2.86 + Y, 0, 0.76, 0.1, 0.76, 0, 0, -s * 0.35);
-    add(body, U.cone, bone, s * 1.68, 3.52 + Y, 0, 0.15, 0.55, 0.15, 0, 0, -s * 0.35);
-    add(body, U.cone, bone, s * 1.62, 3.34 + Y, 0.4, 0.11, 0.38, 0.11, 0.5, 0, -s * 0.35); add(body, U.cone, bone, s * 1.62, 3.34 + Y, -0.4, 0.11, 0.38, 0.11, -0.5, 0, -s * 0.35);
-    const arm = new THREE.Group(); arm.position.set(s * 1.6, 2.72 + Y, 0); body.add(arm); arms.push(arm);
-    add(arm, U.cap, skin, 0, -0.5, 0, 0.8, 0.52, 0.8);
-    add(arm, U.s16, lite, s * 0.12, -0.4, 0.12, 0.3, 0.36, 0.3);
-    const fore = new THREE.Group(); fore.position.set(0, -1.0, 0); arm.add(fore); fores.push(fore);
-    add(fore, U.s16, skin, 0, 0, 0, 0.38, 0.38, 0.38);
-    add(fore, U.cap, skin, 0, -0.42, 0, 0.72, 0.45, 0.72);
-    add(fore, U.cyl, armor, 0, -0.5, 0, 0.43, 0.5, 0.43);
-    add(fore, U.cyl, trim, 0, -0.27, 0, 0.46, 0.08, 0.46); add(fore, U.cyl, trim, 0, -0.73, 0, 0.46, 0.08, 0.46);
-    for (let k = 0; k < 3; k++) add(fore, U.cone, bone, s * 0.52, -0.32 - k * 0.18, 0, 0.07, 0.26, 0.07, 0, 0, -s * Math.PI / 2);
-    add(fore, U.s16, dark, 0, -1.08, 0.05, 0.58, 0.54, 0.58);
-    for (let k = 0; k < 4; k++) add(fore, U.s8, trim, (k - 1.5) * 0.21, -1.32, 0.38, 0.1, 0.1, 0.1);
-    const leg = new THREE.Group(); leg.position.set(s * 0.55, 1.2, 0); g.add(leg); legs.push(leg);
-    add(leg, U.cap, cloth, 0, -0.3, 0, 0.82, 0.34, 0.82);
-    const shin = new THREE.Group(); shin.position.set(0, -0.6, 0); leg.add(shin); leg.userData.shin = shin;
-    add(shin, U.s8, armor, 0, 0, 0.3, 0.28, 0.28, 0.2);
-    add(shin, U.cyl, armor, 0, -0.26, 0, 0.43, 0.48, 0.43);
-    add(shin, U.cyl, trim, 0, -0.06, 0, 0.46, 0.07, 0.46);
-    add(shin, U.s16, dark, 0, -0.48, 0.2, 0.47, 0.24, 0.68);
-    add(shin, U.s8, trim, 0, -0.48, 0.7, 0.27, 0.16, 0.2);
+  if(kind===0){ // broad rock-crab shield and blunt barnacles
+    for(const s of [-1,1])for(let i=0;i<3;i++)add(body,U.cyl,rim,s*(.52+i*.22),2.05-i*.13,-.18+i*.19,.14,.21,.14,0,0,-s*.32);
+  }else if(kind===1){ // segmented lobster tail and long swept feelers
+    for(let i=0;i<4;i++)add(body,U.s8,i%2?skin:plate,0,.82+i*.22,-.90-i*.28,.77-i*.09,.49,.51);
+    for(const s of [-1,1]){
+      add(body,U.s8,shell,s*.36,1.62,-2.02,.51,.20,.50,-.55,0,-s*.5);
+      add(head,U.cone,rim,s*.66,.98,.15,.065,1.85,.065,-.5,0,-s*.60);
+    }
+  }else{ // gold-edged nautilus shell with a lit spiral on both flanks
+    add(body,U.s16,plate,0,2.14,-.64,1.03,1.33,1.38);
+    for(const s of [-1,1]){
+      add(body,U.cyl,rim,s*.84,2.22,-.64,1.08,.12,1.08,0,0,Math.PI/2);
+      add(body,U.cyl,skin,s*.92,2.22,-.64,.92,.13,.92,0,0,Math.PI/2);
+      for(let k=0;k<15;k++){const a=k*.53,r=.78-k*.043;add(body,U.s8,k<10?rim:shine,s*1.01,2.22+Math.cos(a)*r,-.64+Math.sin(a)*r,.07,.11,.12)}
+      add(head,U.cone,rim,s*.35,.75,.05,.13,1.16,.14,-.11,0,-s*.31);
+    }
+    add(head,U.s16,shine,0,.42,.61,.21,.26,.15);
   }
+
   const sc = [0.92, 1.12, 1.55][kind];
   g.scale.setScalar(sc); scene.add(g);
   const label = mkLabel(640, 200, 5.6 * (0.8 + sc * 0.35), 1.75 * (0.8 + sc * 0.35), 16);
